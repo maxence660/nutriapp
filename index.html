@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NutrIApp — NutrIA</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.hero {
+  text-align: center;
+  padding: 5rem 1rem 3rem;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-pale);
+  color: var(--green-dark);
+  border: 1px solid var(--green-border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: 38px;
+  font-weight: 600;
+  color: var(--gray-900);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.hero h1 span { color: var(--green-mid); }
+.hero p {
+  font-size: 16px;
+  color: var(--gray-400);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 4rem;
+}
+.feature-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+.feature-icon {
+  width: 40px; height: 40px;
+  background: var(--green-pale);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+}
+.feature-icon svg { width: 20px; height: 20px; stroke: var(--green-mid); fill: none; stroke-width: 2; }
+.feature-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+.feature-card p { font-size: 13px; color: var(--gray-400); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot">
+      <svg viewBox="0 0 16 16"><path d="M8 2C5.8 2 4 3.8 4 6c0 1.5.8 2.8 2 3.5V11h4V9.5c1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z"/><path d="M6 13h4M7 11v2M9 11v2"/></svg>
+    </div>
+    NutrIA
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">Accueil</a>
+    <a href="profils.html" class="nav-link">Résidents</a>
+    <a href="menus.html" class="nav-link">Menus IA</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      Mini-Entreprise IA — Hackathon 2026
+    </div>
+    <h1>Menus adaptés,<br /><span>gaspillage réduit</span></h1>
+    <p>NutrIApp génère automatiquement des menus personnalisés pour chaque résident selon son profil médical, ses contraintes alimentaires et le budget de l'établissement.</p>
+    <div class="hero-actions">
+      <a href="profils.html" class="btn btn-primary" style="font-size:15px; padding:11px 24px;">
+        <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+        Gérer les résidents
+      </a>
+      <a href="menus.html" class="btn btn-ghost" style="font-size:15px; padding:11px 24px;">
+        <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M8 5v6"/></svg>
+        Générer un menu
+      </a>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 16 16"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+      </div>
+      <h3>Profils patients</h3>
+      <p>Enregistrez chaque résident avec son profil médical, ses pathologies, allergies et préférences alimentaires.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M5 2v2M11 2v2M2 7h12"/></svg>
+      </div>
+      <h3>Menus hebdomadaires</h3>
+      <p>L'IA génère un menu complet sur 7 jours, adapté à chaque profil, varié et respectueux des contraintes médicales.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 16 16"><path d="M3 12L6 8l3 3 2-4 3 5"/><circle cx="3" cy="12" r="1"/></svg>
+      </div>
+      <h3>Réduction du gaspillage</h3>
+      <p>Les quantités sont ajustées au profil de chaque résident pour limiter les restes et optimiser le budget.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

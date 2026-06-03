@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Résidents — NutrIApp</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 680px) { .split { grid-template-columns: 1fr; } .form-grid-3 { grid-template-columns: 1fr 1fr; } }
+.resident-list { display: flex; flex-direction: column; gap: 10px; }
+.resident-item {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.15s;
+}
+.resident-item:hover { border-color: var(--green-border); }
+.resident-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  color: var(--green-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 13px;
+  flex-shrink: 0;
+}
+.resident-info { flex: 1; min-width: 0; }
+.resident-name { font-size: 14px; font-weight: 500; }
+.resident-meta { font-size: 12px; color: var(--gray-400); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.resident-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-icon {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s;
+  color: var(--gray-400);
+}
+.btn-icon:hover { background: var(--gray-100); color: var(--gray-900); }
+.btn-icon.del:hover { background: var(--red-pale); color: var(--red-dark); border-color: #F7C1C1; }
+.btn-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--gray-400);
+  font-size: 13px;
+}
+.empty-state svg { width: 36px; height: 36px; stroke: var(--gray-200); fill: none; stroke-width: 1.5; margin-bottom: 10px; }
+.counter {
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-bottom: 12px;
+}
+.counter span { font-weight: 500; color: var(--gray-900); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot">
+      <svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M8 2C5.8 2 4 3.8 4 6c0 1.5.8 2.8 2 3.5V11h4V9.5c1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z"/><path d="M6 13h4M7 11v2M9 11v2"/></svg>
+    </div>
+    NutrIA
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Accueil</a>
+    <a href="profils.html" class="nav-link active">Résidents</a>
+    <a href="menus.html" class="nav-link">Menus IA</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <h1>Gestion des résidents</h1>
+    <p>Enregistrez et gérez les profils médicaux des résidents de l'établissement</p>
+  </div>
+
+  <div class="split">
+
+    <div>
+      <div class="card">
+        <div class="card-title">
+          <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M13 14c0-2.8-2.2-5-5-5s-5 2.2-5 5"/><path d="M12 6l2 2-2 2"/></svg>
+          Nouveau résident
+        </div>
+
+        <div class="form-grid" style="margin-bottom:1rem;">
+          <div class="field">
+            <label>Nom</label>
+            <input type="text" id="nom" placeholder="Dupont" />
+          </div>
+          <div class="field">
+            <label>Prénom</label>
+            <input type="text" id="prenom" placeholder="Marguerite" />
+          </div>
+        </div>
+
+        <div class="form-grid-3" style="margin-bottom:1rem;">
+          <div class="field">
+            <label>Âge</label>
+            <input type="number" id="age" placeholder="82" min="1" max="120" />
+          </div>
+          <div class="field">
+            <label>Sexe</label>
+            <select id="sexe">
+              <option value="">—</option>
+              <option value="Femme">Femme</option>
+              <option value="Homme">Homme</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Poids (kg)</label>
+            <input type="number" id="poids" placeholder="62" min="20" max="200" />
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-bottom:1rem;">
+          <div class="field">
+            <label>Mobilité</label>
+            <select id="mobilite">
+              <option value="">— Choisir —</option>
+              <option value="Alité">Alité</option>
+              <option value="Mobilité limitée">Mobilité limitée</option>
+              <option value="Autonome">Autonome</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Budget repas/jour (€)</label>
+            <input type="number" id="budget" placeholder="8" min="1" max="50" />
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:1rem;">
+          <label>Chambre / Unité</label>
+          <input type="text" id="chambre" placeholder="ex. Chambre 12 — Unité A" />
+        </div>
+
+        <hr class="divider" />
+
+        <div class="field" style="margin-bottom:1rem;">
+          <label>Pathologies / régimes</label>
+          <div class="tag-wrap" id="patho-tags">
+            <span class="tag" data-val="Diabète type 2">Diabète type 2</span>
+            <span class="tag" data-val="Insuffisance rénale">Insuf. rénale</span>
+            <span class="tag" data-val="Régime sans sel">Sans sel</span>
+            <span class="tag" data-val="Régime sans gluten">Sans gluten</span>
+            <span class="tag" data-val="Dysphagie">Dysphagie</span>
+            <span class="tag" data-val="Hypertension">Hypertension</span>
+            <span class="tag" data-val="Dénutrition">Dénutrition</span>
+            <span class="tag" data-val="Constipation chronique">Constipation</span>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:1rem;">
+          <label>Allergies</label>
+          <div class="tag-wrap" id="allergie-tags">
+            <span class="tag" data-val="Fruits à coque">Fruits à coque</span>
+            <span class="tag" data-val="Lactose">Lactose</span>
+            <span class="tag" data-val="Oeufs">Oeufs</span>
+            <span class="tag" data-val="Poisson">Poisson</span>
+            <span class="tag" data-val="Crustacés">Crustacés</span>
+            <span class="tag" data-val="Gluten">Gluten</span>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:1.25rem;">
+          <label>Notes complémentaires</label>
+          <textarea id="notes" placeholder="Préférences, observations particulières..."></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="ajouterResident()">
+          <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>
+          Enregistrer le résident
+        </button>
+
+        <div id="form-alert"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">
+          <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h12M2 8h12M2 12h8"/></svg>
+          Liste des résidents
+        </div>
+        <div class="counter">Total : <span id="count">0</span> résident(s)</div>
+        <div class="resident-list" id="resident-list">
+          <div class="empty-state">
+            <svg viewBox="0 0 16 16"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+            Aucun résident enregistré.<br />Utilisez le formulaire pour en ajouter un.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const pathos = new Set();
+const allergies = new Set();
+
+document.querySelectorAll('#patho-tags .tag').forEach(t => {
+  t.addEventListener('click', () => { toggle(t, pathos); });
+});
+document.querySelectorAll('#allergie-tags .tag').forEach(t => {
+  t.addEventListener('click', () => { toggle(t, allergies); });
+});
+
+function toggle(el, set) {
+  const v = el.dataset.val;
+  if (set.has(v)) { set.delete(v); el.classList.remove('on'); }
+  else { set.add(v); el.classList.add('on'); }
+}
+
+function getResidents() {
+  return JSON.parse(localStorage.getItem('nutriapp_residents') || '[]');
+}
+function saveResidents(arr) {
+  localStorage.setItem('nutriapp_residents', JSON.stringify(arr));
+}
+
+function ajouterResident() {
+  const nom = document.getElementById('nom').value.trim();
+  const prenom = document.getElementById('prenom').value.trim();
+  const age = document.getElementById('age').value;
+  const sexe = document.getElementById('sexe').value;
+  const poids = document.getElementById('poids').value;
+  const mobilite = document.getElementById('mobilite').value;
+  const budget = document.getElementById('budget').value;
+  const chambre = document.getElementById('chambre').value.trim();
+  const notes = document.getElementById('notes').value.trim();
+
+  if (!nom || !prenom || !age || !sexe || !poids || !mobilite || !budget) {
+    showAlert('form-alert', 'error', 'Veuillez remplir tous les champs obligatoires.');
+    return;
+  }
+
+  const resident = {
+    id: Date.now(),
+    nom, prenom, age, sexe, poids, mobilite, budget, chambre, notes,
+    pathologies: [...pathos],
+    allergies: [...allergies],
+    dateAjout: new Date().toLocaleDateString('fr-FR')
+  };
+
+  const list = getResidents();
+  list.push(resident);
+  saveResidents(list);
+  renderList();
+  resetForm();
+  showAlert('form-alert', 'success', `${prenom} ${nom} a été enregistré(e) avec succès.`);
+}
+
+function supprimerResident(id) {
+  const list = getResidents().filter(r => r.id !== id);
+  saveResidents(list);
+  renderList();
+}
+
+function renderList() {
+  const list = getResidents();
+  const container = document.getElementById('resident-list');
+  document.getElementById('count').textContent = list.length;
+
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 16 16"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>Aucun résident enregistré.<br />Utilisez le formulaire pour en ajouter un.</div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(r => {
+    const initiales = (r.prenom[0] + r.nom[0]).toUpperCase();
+    const tags = [...r.pathologies, ...r.allergies].slice(0, 3).join(', ') || 'Aucune contrainte';
+    return `
+    <div class="resident-item">
+      <div class="resident-avatar">${initiales}</div>
+      <div class="resident-info">
+        <div class="resident-name">${r.prenom} ${r.nom}</div>
+        <div class="resident-meta">${r.age} ans · ${r.sexe} · ${r.mobilite} — ${tags}</div>
+      </div>
+      <div class="resident-actions">
+        <button class="btn-icon del" title="Supprimer" onclick="supprimerResident(${r.id})">
+          <svg viewBox="0 0 16 16"><path d="M3 4h10M5 4V3h6v1M6 7v5M10 7v5"/><rect x="4" y="4" width="8" height="9" rx="1"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function resetForm() {
+  ['nom','prenom','age','sexe','poids','mobilite','budget','chambre','notes'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+  });
+  pathos.clear(); allergies.clear();
+  document.querySelectorAll('.tag.on').forEach(t => t.classList.remove('on'));
+}
+
+function showAlert(containerId, type, msg) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = `<div class="alert alert-${type === 'success' ? 'success' : 'error'}">${msg}</div>`;
+  setTimeout(() => { el.innerHTML = ''; }, 4000);
+}
+
+renderList();
+</script>
+</body>
+</html>

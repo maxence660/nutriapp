@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menus IA — NutrIApp</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.selector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.selector-card {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+  display: flex; align-items: center; gap: 10px;
+}
+.selector-card:hover { border-color: var(--green-border); }
+.selector-card.selected { border-color: var(--green-mid); background: var(--green-pale); }
+.sel-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 12px;
+  flex-shrink: 0;
+}
+.selector-card.selected .sel-avatar { background: var(--green-border); color: var(--green-dark); }
+.sel-name { font-size: 14px; font-weight: 500; }
+.sel-meta { font-size: 12px; color: var(--gray-400); }
+.selector-card.selected .sel-meta { color: var(--green-mid); }
+.day-block {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.day-head {
+  background: var(--gray-100);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-600);
+  display: flex; align-items: center; gap: 6px;
+}
+.day-head svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.meal-slot { padding: 10px 14px; display: flex; gap: 10px; align-items: flex-start; }
+.meal-slot + .meal-slot { border-top: 1px solid var(--gray-200); }
+.meal-time {
+  min-width: 38px;
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
+  padding-top: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.meal-items { font-size: 13px; color: var(--gray-900); line-height: 1.5; }
+.meal-items span { display: inline-block; margin-right: 6px; }
+.meal-sep { color: var(--gray-200); }
+.result-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+.no-residents {
+  text-align: center; padding: 2rem;
+  color: var(--gray-400); font-size: 14px;
+}
+.no-residents a { color: var(--green-mid); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot">
+      <svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M8 2C5.8 2 4 3.8 4 6c0 1.5.8 2.8 2 3.5V11h4V9.5c1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z"/><path d="M6 13h4M7 11v2M9 11v2"/></svg>
+    </div>
+    NutrIA
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Accueil</a>
+    <a href="profils.html" class="nav-link">Résidents</a>
+    <a href="menus.html" class="nav-link active">Menus IA</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <h1>Génération des menus</h1>
+    <p>Sélectionnez un résident et l'IA génère un menu hebdomadaire entièrement personnalisé</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+      Choisir un résident
+    </div>
+    <div id="selector-zone">
+      <div class="no-residents">Aucun résident enregistré. <a href="profils.html">Ajouter des résidents →</a></div>
+    </div>
+  </div>
+
+  <div class="card" id="profil-recap" style="display:none;">
+    <div class="card-title">
+      <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5h12M2 9h8M2 13h5"/></svg>
+      Récapitulatif du profil sélectionné
+    </div>
+    <div id="profil-recap-content"></div>
+  </div>
+
+  <button class="btn btn-primary btn-full" id="btn-gen" onclick="genererMenu()" disabled>
+    <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/><circle cx="8" cy="8" r="6"/></svg>
+    Générer le menu de la semaine
+  </button>
+
+  <div id="loading-zone" style="display:none;">
+    <div class="loading-box">
+      <div class="spin"></div>
+      L'IA génère le menu personnalisé...
+    </div>
+  </div>
+
+  <div class="card" id="result-card" style="display:none;">
+    <div class="result-header">
+      <div style="flex:1;">
+        <div style="font-size:16px; font-weight:500;" id="result-title"></div>
+        <div style="font-size:13px; color:var(--gray-400); margin-top:2px;" id="result-subtitle"></div>
+      </div>
+      <span class="badge badge-green">Menu IA personnalisé</span>
+    </div>
+    <div class="stat-grid" id="result-stats" style="margin-bottom:1.25rem;"></div>
+    <div id="result-days"></div>
+    <div id="result-conseil" style="margin-top:1rem;"></div>
+  </div>
+
+  <div id="error-zone"></div>
+</div>
+
+<script>
+let selectedResident = null;
+
+function getResidents() {
+  return JSON.parse(localStorage.getItem('nutriapp_residents') || '[]');
+}
+
+function renderSelector() {
+  const list = getResidents();
+  const zone = document.getElementById('selector-zone');
+  if (list.length === 0) {
+    zone.innerHTML = `<div class="no-residents">Aucun résident enregistré. <a href="profils.html">Ajouter des résidents →</a></div>`;
+    return;
+  }
+  zone.innerHTML = `<div class="selector-grid">${list.map(r => {
+    const initiales = (r.prenom[0] + r.nom[0]).toUpperCase();
+    const patho = r.pathologies.slice(0,2).join(', ') || 'Aucune contrainte';
+    return `<div class="selector-card" data-id="${r.id}" onclick="selectResident(${r.id})">
+      <div class="sel-avatar">${initiales}</div>
+      <div>
+        <div class="sel-name">${r.prenom} ${r.nom}</div>
+        <div class="sel-meta">${r.age} ans · ${patho}</div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function selectResident(id) {
+  const list = getResidents();
+  selectedResident = list.find(r => r.id === id);
+  document.querySelectorAll('.selector-card').forEach(c => c.classList.toggle('selected', parseInt(c.dataset.id) === id));
+  document.getElementById('btn-gen').disabled = false;
+  afficherRecap();
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('error-zone').innerHTML = '';
+}
+
+function afficherRecap() {
+  const r = selectedResident;
+  if (!r) return;
+  const patho = r.pathologies.length ? r.pathologies.map(p => `<span class="badge badge-amber" style="margin-right:4px;">${p}</span>`).join('') : '<span class="badge" style="background:var(--gray-100);color:var(--gray-600);">Aucune</span>';
+  const allerg = r.allergies.length ? r.allergies.map(a => `<span class="badge badge-red" style="margin-right:4px;">${a}</span>`).join('') : '<span class="badge" style="background:var(--gray-100);color:var(--gray-600);">Aucune</span>';
+  document.getElementById('profil-recap-content').innerHTML = `
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:13px;">
+      <div><span style="color:var(--gray-400);">Âge / Sexe :</span> <strong>${r.age} ans · ${r.sexe}</strong></div>
+      <div><span style="color:var(--gray-400);">Poids :</span> <strong>${r.poids} kg</strong></div>
+      <div><span style="color:var(--gray-400);">Mobilité :</span> <strong>${r.mobilite}</strong></div>
+      <div><span style="color:var(--gray-400);">Budget/jour :</span> <strong>${r.budget} €</strong></div>
+      ${r.chambre ? `<div><span style="color:var(--gray-400);">Chambre :</span> <strong>${r.chambre}</strong></div>` : ''}
+    </div>
+    <div style="margin-top:10px;">
+      <div style="font-size:12px; color:var(--gray-400); margin-bottom:5px;">Pathologies</div>${patho}
+    </div>
+    <div style="margin-top:8px;">
+      <div style="font-size:12px; color:var(--gray-400); margin-bottom:5px;">Allergies</div>${allerg}
+    </div>
+    ${r.notes ? `<div style="margin-top:8px; font-size:13px; color:var(--gray-600); background:var(--gray-100); padding:8px 12px; border-radius:var(--radius-sm);">${r.notes}</div>` : ''}
+  `;
+  document.getElementById('profil-recap').style.display = 'block';
+}
+
+async function genererMenu() {
+  const r = selectedResident;
+  if (!r) return;
+
+  const pathos = r.pathologies.length ? r.pathologies.join(', ') : 'aucune contrainte particulière';
+  const allergies = r.allergies.length ? r.allergies.join(', ') : 'aucune allergie';
+
+  document.getElementById('btn-gen').disabled = true;
+  document.getElementById('loading-zone').style.display = 'block';
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('error-zone').innerHTML = '';
+
+  const prompt = `Tu es NutrIApp, moteur IA de nutrition pour établissements médico-sociaux.
+
+Profil du résident :
+- Nom : ${r.prenom} ${r.nom}
+- Âge : ${r.age} ans, ${r.sexe}, ${r.poids} kg
+- Mobilité : ${r.mobilite}
+- Pathologies / régimes : ${pathos}
+- Allergies : ${allergies}
+- Budget journalier : ${r.budget}€
+${r.notes ? `- Notes : ${r.notes}` : ''}
+
+Génère un menu pour 7 jours (Lundi à Dimanche), midi et soir.
+Chaque repas : entrée, plat, accompagnement, dessert.
+Respecte strictement toutes les contraintes médicales et allergies.
+Varie au maximum les propositions.
+Adapte les textures si dysphagie mentionnée.
+
+Réponds UNIQUEMENT en JSON valide, sans texte avant ni après :
+{
+  "apport_calorique": "ex: 1800 kcal/jour",
+  "economie": "ex: -18% vs menu standard",
+  "score": "ex: 96%",
+  "jours": [
+    {
+      "jour": "Lundi",
+      "midi": { "entree": "...", "plat": "...", "accompagnement": "...", "dessert": "..." },
+      "soir": { "entree": "...", "plat": "...", "accompagnement": "...", "dessert": "..." }
+    }
+  ],
+  "conseil": "1 conseil anti-gaspillage concret et personnalisé"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content.map(i => i.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const menu = JSON.parse(clean);
+    afficherResultat(menu);
+  } catch(e) {
+    document.getElementById('error-zone').innerHTML = `<div class="alert alert-error">Erreur lors de la génération. Veuillez réessayer.</div>`;
+  } finally {
+    document.getElementById('btn-gen').disabled = false;
+    document.getElementById('loading-zone').style.display = 'none';
+  }
+}
+
+function afficherResultat(menu) {
+  const r = selectedResident;
+  document.getElementById('result-title').textContent = `Menu de ${r.prenom} ${r.nom} — semaine personnalisée`;
+  document.getElementById('result-subtitle').textContent = `${r.age} ans · ${r.sexe} · ${r.mobilite}`;
+
+  document.getElementById('result-stats').innerHTML = `
+    <div class="stat"><div class="stat-val">${menu.apport_calorique || '—'}</div><div class="stat-lbl">Apport estimé</div></div>
+    <div class="stat"><div class="stat-val">${menu.economie || '—'}</div><div class="stat-lbl">Économie gaspillage</div></div>
+    <div class="stat"><div class="stat-val">${menu.score || '—'}</div><div class="stat-lbl">Personnalisation</div></div>
+  `;
+
+  const days = document.getElementById('result-days');
+  days.innerHTML = menu.jours.map(j => `
+    <div class="day-block">
+      <div class="day-head">
+        <svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M5 2v2M11 2v2M2 7h12"/></svg>
+        ${j.jour}
+      </div>
+      <div class="meal-slot">
+        <div class="meal-time">Midi</div>
+        <div class="meal-items">${j.midi.entree} <span class="meal-sep">·</span> ${j.midi.plat} <span class="meal-sep">·</span> ${j.midi.accompagnement} <span class="meal-sep">·</span> ${j.midi.dessert}</div>
+      </div>
+      <div class="meal-slot">
+        <div class="meal-time">Soir</div>
+        <div class="meal-items">${j.soir.entree} <span class="meal-sep">·</span> ${j.soir.plat} <span class="meal-sep">·</span> ${j.soir.accompagnement} <span class="meal-sep">·</span> ${j.soir.dessert}</div>
+      </div>
+    </div>`).join('');
+
+  if (menu.conseil) {
+    document.getElementById('result-conseil').innerHTML = `<div class="alert alert-success"><svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5v1"/></svg>${menu.conseil}</div>`;
+  }
+
+  document.getElementById('result-card').style.display = 'block';
+}
+
+renderSelector();
+</script>
+</body>
+</html>
