@@ -128,7 +128,7 @@
     NutrIA
   </a>
   <div class="nav-links">
-    <a href="index.html" class="nav-link">Tableau de bord</a>
+    <a href="index.html" class="nav-link">Accueil</a>
     <a href="profils.html" class="nav-link active">Résidents</a>
     <a href="menu-collectif.html" class="nav-link">Menu collectif</a>
   </div>
@@ -409,6 +409,7 @@ function supprimerResident(id) {
   renderList();
 }
 
+var SEED_DATA=__RESIDENTS__;
 function filterList() { renderList(); }
 
 function renderList() {
