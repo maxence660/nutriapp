@@ -123,7 +123,7 @@
     NutrIA
   </a>
   <div class="nav-links">
-    <a href="index.html" class="nav-link">Accueil</a>
+    <a href="index.html" class="nav-link">Tableau de bord</a>
     <a href="profils.html" class="nav-link active">Résidents</a>
     <a href="menu-collectif.html" class="nav-link">Menu collectif</a>
   </div>
@@ -248,8 +248,31 @@
           <svg class="icon-sm" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h12M2 8h12M2 12h8"/></svg>
           Liste des résidents
         </div>
-        <div class="counter">Total : <span id="count">0</span> résident(s)</div>
-        <div class="resident-list" id="resident-list">
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div style="flex:1;position:relative">
+            <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;stroke:var(--gray-400);fill:none;stroke-width:2" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4"/><path d="M11 11l2 2"/></svg>
+            <input type="text" id="search-input" placeholder="Rechercher un résident..." oninput="filterList()" style="width:100%;padding:7px 10px 7px 30px;border:1px solid var(--gray-200);border-radius:var(--radius-md);font-size:13px;font-family:inherit;outline:none"/>
+          </div>
+          <select id="filter-patho" onchange="filterList()" style="padding:7px 10px;border:1px solid var(--gray-200);border-radius:var(--radius-md);font-size:12px;font-family:inherit;color:var(--gray-600);outline:none;background:var(--white)">
+            <option value="">Toutes pathologies</option>
+            <option>Diabète type 2</option>
+            <option>Hypertension</option>
+            <option>Insuffisance rénale</option>
+            <option>Régime sans sel</option>
+            <option>Régime sans gluten</option>
+            <option>Dysphagie</option>
+            <option>Dénutrition</option>
+            <option>Constipation</option>
+          </select>
+          <select id="filter-mob" onchange="filterList()" style="padding:7px 10px;border:1px solid var(--gray-200);border-radius:var(--radius-md);font-size:12px;font-family:inherit;color:var(--gray-600);outline:none;background:var(--white)">
+            <option value="">Toute mobilité</option>
+            <option>Alité</option>
+            <option>Mobilité limitée</option>
+            <option>Autonome</option>
+          </select>
+        </div>
+        <div class="counter">Affichés : <span id="count-filtered">0</span> / <span id="count">0</span> résident(s)</div>
+        <div class="resident-list" id="resident-list" style="max-height:500px;overflow-y:auto">
           <div class="empty-state">
             <svg viewBox="0 0 16 16"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
             Aucun résident enregistré.<br />Utilisez le formulaire pour en ajouter un.
@@ -381,17 +404,37 @@ function supprimerResident(id) {
   renderList();
 }
 
+function filterList() { renderList(); }
+
 function renderList() {
   const list = getResidents();
+  const search = (document.getElementById('search-input')||{value:''}).value.toLowerCase();
+  const filterP = (document.getElementById('filter-patho')||{value:''}).value;
+  const filterM = (document.getElementById('filter-mob')||{value:''}).value;
+
+  const filtered = list.filter(r => {
+    const fullName = (r.prenom+' '+r.nom).toLowerCase();
+    const matchSearch = !search || fullName.includes(search);
+    const matchPatho = !filterP || r.pathologies.includes(filterP);
+    const matchMob = !filterM || r.mobilite === filterM;
+    return matchSearch && matchPatho && matchMob;
+  });
+
   const container = document.getElementById('resident-list');
   document.getElementById('count').textContent = list.length;
+  const cf = document.getElementById('count-filtered');
+  if(cf) cf.textContent = filtered.length;
 
   if (list.length === 0) {
     container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 16 16"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>Aucun résident enregistré.<br />Utilisez le formulaire pour en ajouter un.</div>`;
     return;
   }
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 16 16"><path d="M8 9A3 3 0 1 0 8 3a3 3 0 0 0 0 6z"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>Aucun résident ne correspond aux filtres.</div>`;
+    return;
+  }
 
-  container.innerHTML = list.map(r => {
+  container.innerHTML = filtered.map(r => {
     const initiales = (r.prenom[0] + r.nom[0]).toUpperCase();
     const tags = [...r.pathologies, ...r.allergies].slice(0, 3).join(', ') || 'Aucune contrainte';
     return `

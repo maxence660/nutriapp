@@ -51,6 +51,17 @@
 .stat-val{font-size:20px;font-weight:600;color:var(--green-mid)}
 .stat-lbl{font-size:11px;color:var(--gray-400);margin-top:2px}
 @media(max-width:640px){.meal-grid{grid-template-columns:1fr 1fr}.constraints-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+.btn-pdf{display:inline-flex;align-items:center;gap:7px;background:var(--green-mid);color:#fff;border:none;padding:9px 18px;border-radius:var(--radius-md);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;margin-top:12px}
+.btn-pdf:hover{background:var(--green-dark)}
+@media print{
+  nav,.week-nav,.btn-pdf,.constraints-grid,.tips-card,.stat-row{display:none!important}
+  .main{padding:0;max-width:100%}
+  .menu-hero{padding:16px;border:none}
+  .day-card{break-inside:avoid;margin-bottom:16px;border:1px solid #ccc}
+  .meal-section{break-inside:avoid}
+  body{background:#fff}
+}
 </style>
 </head>
 <body>
@@ -60,7 +71,7 @@
     NutrIA
   </a>
   <div class="nav-links">
-    <a href="index.html" class="nav-link">Accueil</a>
+    <a href="index.html" class="nav-link">Tableau de bord</a>
     <a href="profils.html" class="nav-link">Résidents</a>
     <a href="menu-collectif.html" class="nav-link active">Menu collectif</a>
   </div>
@@ -75,6 +86,11 @@
   <p>Menu 7 jours adapté à toutes les contraintes médicales de l'établissement. Sans gluten, sans lactose, sans œufs, sans poisson, sans crustacés, sans fruits à coque.</p>
 </div>
 
+
+  <button class="btn-pdf" onclick="imprimerMenu()">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6V2h8v4M4 12H2V7h12v5h-2M4 12v2h8v-2"/></svg>
+    Télécharger / Imprimer le menu
+  </button>
 <div class="week-nav" id="week-nav"></div>
 
 <div class="main">
