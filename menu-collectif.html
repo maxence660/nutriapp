@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Menu Collectif — NutrIA</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.menu-hero{background:var(--white);border-bottom:1px solid var(--gray-200);padding:32px 24px;text-align:center}
+.menu-hero h1{font-size:24px;font-weight:600;margin-bottom:6px}
+.menu-hero p{font-size:14px;color:var(--gray-400);max-width:500px;margin:0 auto}
+.week-nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:16px 24px;background:var(--white);border-bottom:1px solid var(--gray-200)}
+.day-btn{padding:7px 14px;border-radius:20px;font-size:13px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);cursor:pointer;transition:all .15s;font-family:inherit}
+.day-btn:hover{border-color:var(--green-border);color:var(--green-dark)}
+.day-btn.on{background:var(--green-pale);border-color:var(--green-border);color:var(--green-dark);font-weight:500}
+.main{max-width:900px;margin:0 auto;padding:24px 20px}
+.constraints-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.ccard{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:14px 16px}
+.ccard-title{font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.cbar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.cbar-count{font-weight:500;min-width:22px;color:var(--green-mid);font-size:11px}
+.cbar{flex:1;height:5px;background:var(--gray-200);border-radius:3px;overflow:hidden}
+.cbar-fill{height:100%;border-radius:3px;background:var(--green-mid)}
+.cbar-fill.warn{background:var(--amber)}
+.cbar-lbl{font-size:11px;color:var(--gray-400);min-width:110px}
+.badge-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.badge{display:inline-flex;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-red{background:var(--red-pale);color:var(--red-dark)}
+.badge-amber{background:var(--amber-pale);color:var(--amber-dark)}
+.badge-green{background:var(--green-pale);color:var(--green-dark)}
+.day-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:0}
+.day-header{background:var(--green-pale);padding:14px 18px;display:flex;align-items:center;gap:10px}
+.day-name{font-size:18px;font-weight:600;color:var(--green-dark)}
+.day-sub{font-size:12px;color:var(--green-mid)}
+.meal-section{padding:16px 18px;border-bottom:1px solid var(--gray-200)}
+.meal-section:last-child{border-bottom:none}
+.meal-title{font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.meal-title i{font-size:14px}
+.meal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.meal-item{display:flex;flex-direction:column;gap:3px}
+.meal-item-label{font-size:10px;color:var(--gray-400);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.meal-item-value{font-size:13px;color:var(--gray-900);line-height:1.4}
+.tips-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:16px 18px;margin-top:16px}
+.tip-item{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:var(--gray-600);line-height:1.6}
+.tip-item:last-child{margin-bottom:0}
+.tip-icon{color:var(--green-mid);font-size:16px;flex-shrink:0;margin-top:1px}
+.tip-item b{color:var(--gray-900)}
+.section-title{font-size:13px;font-weight:500;color:var(--gray-900);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--gray-100);border-radius:var(--radius-md);padding:12px;text-align:center}
+.stat-val{font-size:20px;font-weight:600;color:var(--green-mid)}
+.stat-lbl{font-size:11px;color:var(--gray-400);margin-top:2px}
+@media(max-width:640px){.meal-grid{grid-template-columns:1fr 1fr}.constraints-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot"><svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M8 2C5.8 2 4 3.8 4 6c0 1.5.8 2.8 2 3.5V11h4V9.5c1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z"/><path d="M6 13h4M7 11v2M9 11v2"/></svg></div>
+    NutrIA
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Accueil</a>
+    <a href="profils.html" class="nav-link">Résidents</a>
+    <a href="menus.html" class="nav-link">Menus IA</a>
+    <a href="menu-collectif.html" class="nav-link active">Menu collectif</a>
+  </div>
+</nav>
+
+<div class="menu-hero">
+  <div style="display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green-border);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:500;margin-bottom:12px">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+    Menu généré par IA — Semaine du lundi
+  </div>
+  <h1>Menu collectif — 50 résidents</h1>
+  <p>Menu 7 jours adapté à toutes les contraintes médicales de l'établissement. Sans gluten, sans lactose, sans œufs, sans poisson, sans crustacés, sans fruits à coque.</p>
+</div>
+
+<div class="week-nav" id="week-nav"></div>
+
+<div class="main">
+  <div class="stat-row">
+    <div class="stat"><div class="stat-val">50</div><div class="stat-lbl">Résidents</div></div>
+    <div class="stat"><div class="stat-val">83</div><div class="stat-lbl">Âge moyen</div></div>
+    <div class="stat"><div class="stat-val">8</div><div class="stat-lbl">Pathologies couvertes</div></div>
+    <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Allergènes exclus</div></div>
+  </div>
+
+  <div class="constraints-grid">
+    <div class="ccard">
+      <div class="ccard-title">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M8 10v4M2 8h4M10 8h4"/><circle cx="8" cy="8" r="2"/></svg>
+        Pathologies prises en compte
+      </div>
+      <div class="cbar-row"><span class="cbar-count">17</span><div class="cbar"><div class="cbar-fill" style="width:100%"></div></div><span class="cbar-lbl">Régime sans sel</span></div>
+      <div class="cbar-row"><span class="cbar-count">13</span><div class="cbar"><div class="cbar-fill" style="width:76%"></div></div><span class="cbar-lbl">Hypertension</span></div>
+      <div class="cbar-row"><span class="cbar-count">12</span><div class="cbar"><div class="cbar-fill warn" style="width:70%"></div></div><span class="cbar-lbl">Dénutrition</span></div>
+      <div class="cbar-row"><span class="cbar-count">11</span><div class="cbar"><div class="cbar-fill warn" style="width:64%"></div></div><span class="cbar-lbl">Dysphagie</span></div>
+      <div class="cbar-row"><span class="cbar-count">7</span><div class="cbar"><div class="cbar-fill" style="width:41%"></div></div><span class="cbar-lbl">Diabète type 2</span></div>
+      <div class="cbar-row"><span class="cbar-count">6</span><div class="cbar"><div class="cbar-fill" style="width:35%"></div></div><span class="cbar-lbl">Régime sans gluten</span></div>
+      <div class="cbar-row"><span class="cbar-count">6</span><div class="cbar"><div class="cbar-fill" style="width:35%"></div></div><span class="cbar-lbl">Constipation</span></div>
+      <div class="cbar-row"><span class="cbar-count">4</span><div class="cbar"><div class="cbar-fill" style="width:23%"></div></div><span class="cbar-lbl">Insuf. rénale</span></div>
+    </div>
+    <div class="ccard">
+      <div class="ccard-title">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l10 10M13 3L3 13"/></svg>
+        Allergènes exclus du menu
+      </div>
+      <div class="badge-row">
+        <span class="badge badge-red">Crustacés (11)</span>
+        <span class="badge badge-red">Fruits à coque (11)</span>
+        <span class="badge badge-red">Lactose (11)</span>
+        <span class="badge badge-red">Œufs (10)</span>
+        <span class="badge badge-red">Poisson (6)</span>
+        <span class="badge badge-red">Gluten (4)</span>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--gray-400);line-height:1.7">
+        Tous les plats du menu sont exempts de ces allergènes. Les résidents dysphagiques (11) peuvent recevoir les mêmes plats en version mixée. Les résidents dénutris (12) peuvent bénéficier d'un enrichissement calorique via huile d'olive ou purée de légumineuses.
+      </div>
+    </div>
+  </div>
+
+  <div id="day-display"></div>
+
+  <div class="tips-card">
+    <div class="section-title">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--green-mid)" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5v1"/></svg>
+      Conseils anti-gaspillage — cantine collective
+    </div>
+    <div class="tip-item"><span class="tip-icon">♻</span><div><b>Valoriser le bouillon du pot-au-feu (samedi)</b> — le bouillon devient base du consommé du dimanche, les légumes non servis rejoignent le velouté du soir.</div></div>
+    <div class="tip-item"><span class="tip-icon">🍲</span><div><b>Compotes en grande quantité le lundi</b> — conservées 5 jours au réfrigérateur, elles servent toute la semaine et réduisent la préparation quotidienne.</div></div>
+    <div class="tip-item"><span class="tip-icon">🛒</span><div><b>Commander riz, pommes de terre et carottes en gros</b> — ces 3 ingrédients reviennent chaque jour dans des préparations différentes, zéro perte.</div></div>
+    <div class="tip-item"><span class="tip-icon">🥣</span><div><b>Mixer en fin de service</b> — pour les 11 résidents dysphagiques, mixer une portion du plat principal évite deux recettes distinctes et réduit les pertes de ~30%.</div></div>
+    <div class="tip-item"><span class="tip-icon">❄</span><div><b>Congeler les fonds de sauce</b> — jus de cuisson du poulet et du veau congelés en portions, réutilisables la semaine suivante comme base de soupes ou sauces.</div></div>
+  </div>
+</div>
+
+<script>
+const MENU=[
+  {
+    jour:'Lundi',
+    midi:{entree:'Velouté de carottes et gingembre',plat:'Poulet rôti aux herbes de Provence',accompagnement:'Riz blanc vapeur',dessert:'Compote de pommes maison sans sucre ajouté'},
+    soir:{entree:'Salade de betteraves à l\'huile d\'olive et persil',plat:'Hachis Parmentier de bœuf (purée à l\'huile d\'olive)',accompagnement:'Haricots verts vapeur',dessert:'Banane écrasée'}
+  },
+  {
+    jour:'Mardi',
+    midi:{entree:'Soupe de courgettes à la menthe',plat:'Cuisse de dinde mijotée au thym et romarin',accompagnement:'Quinoa aux herbes',dessert:'Poire pochée à la cannelle'},
+    soir:{entree:'Velouté de lentilles corail',plat:'Galettes de pommes de terre au persil (sans œufs)',accompagnement:'Épinards sautés à l\'ail',dessert:'Compote pêche-abricot'}
+  },
+  {
+    jour:'Mercredi',
+    midi:{entree:'Bouillon de légumes aux vermicelles de riz',plat:'Bœuf bourguignon (sauce liée à la fécule de maïs)',accompagnement:'Pommes de terre vapeur',dessert:'Melon frais'},
+    soir:{entree:'Velouté de petits pois à la menthe',plat:'Escalope de dinde à la sauce tomate maison',accompagnement:'Polenta crémeuse à l\'huile d\'olive',dessert:'Compote de pruneaux'}
+  },
+  {
+    jour:'Jeudi',
+    midi:{entree:'Soupe de potimarron et cumin',plat:'Poulet en cocotte aux légumes racines',accompagnement:'Riz complet vapeur',dessert:'Salade de fruits de saison'},
+    soir:{entree:'Carottes râpées à la coriandre et huile de colza',plat:'Mijoté de lentilles vertes aux légumes',accompagnement:'Purée de patates douces à l\'huile d\'olive',dessert:'Compote pomme-poire'}
+  },
+  {
+    jour:'Vendredi',
+    midi:{entree:'Velouté de brocolis',plat:'Rôti de veau aux champignons (sauce fécule)',accompagnement:'Polenta fine',dessert:'Abricots pochés au sirop léger'},
+    soir:{entree:'Soupe de tomates fraîches au basilic',plat:'Blanc de poulet grillé aux herbes',accompagnement:'Haricots blancs mijotés à la tomate',dessert:'Banane et compote de framboises'}
+  },
+  {
+    jour:'Samedi',
+    midi:{entree:'Velouté de céleri-rave',plat:'Pot-au-feu de bœuf (bouillon peu salé)',accompagnement:'Pommes de terre et carottes fondantes',dessert:'Compote de coings'},
+    soir:{entree:'Salade de concombre à l\'huile d\'olive et aneth',plat:'Galettes de haricots rouges aux épices douces',accompagnement:'Riz basmati',dessert:'Pêche au sirop maison'}
+  },
+  {
+    jour:'Dimanche',
+    midi:{entree:'Consommé de volaille maison',plat:'Cuisse de canard confite dégraissée',accompagnement:'Sarrasin aux herbes et carottes glacées',dessert:'Tarte aux pommes (pâte sans gluten, sans beurre ni œufs)'},
+    soir:{entree:'Velouté de courgettes et pommes de terre',plat:'Mijoté de pois chiches à la tomate et cumin',accompagnement:'Riz complet vapeur',dessert:'Compote de cerises'}
+  }
+];
+
+let currentDay=0;
+
+function renderNav(){
+  const nav=document.getElementById('week-nav');
+  nav.innerHTML=MENU.map((d,i)=>`<button class="day-btn${i===currentDay?' on':''}" onclick="showDay(${i})">${d.jour}</button>`).join('');
+}
+
+function renderDay(){
+  const d=MENU[currentDay];
+  const mealHTML=(meal,label,icon)=>`
+    <div class="meal-section">
+      <div class="meal-title"><i class="ti ${icon}" aria-hidden="true"></i>${label}</div>
+      <div class="meal-grid">
+        <div class="meal-item"><span class="meal-item-label">Entrée</span><span class="meal-item-value">${meal.entree}</span></div>
+        <div class="meal-item"><span class="meal-item-label">Plat</span><span class="meal-item-value">${meal.plat}</span></div>
+        <div class="meal-item"><span class="meal-item-label">Accompagnement</span><span class="meal-item-value">${meal.accompagnement}</span></div>
+        <div class="meal-item"><span class="meal-item-label">Dessert</span><span class="meal-item-value">${meal.dessert}</span></div>
+      </div>
+    </div>`;
+  document.getElementById('day-display').innerHTML=`
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-name">${d.jour}</div>
+          <div class="day-sub">Menu collectif — 50 résidents · Sans gluten · Sans lactose · Sans œufs · Sans poisson</div>
+        </div>
+      </div>
+      ${mealHTML(d.midi,'Repas du midi','ti-sun')}
+      ${mealHTML(d.soir,'Repas du soir','ti-moon')}
+    </div>`;
+}
+
+function showDay(i){currentDay=i;renderNav();renderDay()}
+
+renderNav();renderDay();
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+</body>
+</html>
